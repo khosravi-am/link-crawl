@@ -1,0 +1,31 @@
+version: '3'
+ 
+services:
+
+  selenium_hub:
+    build: ./urlcollector
+    container_name: selenium_server_hub
+    command: sh -c "java -jar selenium-server-4.14.0.jar hub --port 4444 && java -jar  selenium-server-4.14.0.jar node --port 5000"
+    volumes:
+      - .:/app
+    ports:
+      - 4444:4444
+
+  # selenium_node:
+  #   build: 
+  #   container_name: selenium_node
+  #   command: sh -c "java -jar  selenium-server-4.14.0.jar node --port 5000"
+  #   volumes:
+  #     - .:/app
+  #   ports:
+  #     - 5000:5000
+
+
+  web:
+    build: .
+    container_name: url_collect
+    command: sh -c "cd urlcollector && poetry run uvicorn main:app --host 0.0.0.0 --port 8000"
+    volumes:
+            - .:/app
+    ports:
+      - 8000:8000
